@@ -1,0 +1,11 @@
+# Ignore build directories
+cmake-build-*/
+build/
+bin/
+
+# Ignore IDE settings
+.idea/
+*.user
+
+# Ignore macOS system files
+.DS_Store
