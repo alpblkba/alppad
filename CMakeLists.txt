@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(aippad)
+project(alppad)
 
 #Qt and C++ standard setup
 set(CMAKE_CXX_STANDARD 17)
@@ -37,7 +37,7 @@ set(PROJECT_SOURCES
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 # exe
-add_executable(aippad ${PROJECT_SOURCES})
+add_executable(alppad ${PROJECT_SOURCES})
 
 # link the Qt widgets
-target_link_libraries(aippad PRIVATE Qt6::Widgets)
+target_link_libraries(alppad PRIVATE Qt6::Widgets)
