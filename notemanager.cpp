@@ -1,15 +1,16 @@
 #include "notemanager.h"
 #include "note.h"
+#include "xmlstorage.h"
 
 #include <QTextDocument>
 #include <QSignalMapper>
 
-int nextNodeId();
+int nextNoteId();
 
 NoteManager::NoteManager(QObject *parent) : QObject(parent) // we are gonna allocate this on the stack
 {
     mapChangedSignaltoNoteId = new QSignalMapper(this);
-    connect(mapChangedSignaltoNoteId, &QSignalMapper::mappedInt, this, &NoteManager::NoteContentChanged);
+    connect(mapChangedSignaltoNoteId, &QSignalMapper::mappedInt, this, &NoteManager::noteContentChanged);
 
     readNotes();
 
@@ -25,7 +26,7 @@ NoteManager::~NoteManager()
 
 void NoteManager::createNewNote()
 {
-    int id = nextNodeId();
+    int id = nextNoteId();
 
     //     std::unordered_map<int, std::pair<Note, std::unique_ptr<QTextDocument>>> notes;
 
@@ -114,12 +115,23 @@ void NoteManager::NoteContentChanged(int id)
 
 void NoteManager::readNotes()
 {
-    //TODO
+    XmlStorage storage;
+
+    auto savedNotes = storage.read();
+
+    for(auto n : savedNotes) {
+
+        n.id = nextNoteId();
+        auto&[note, textDocument] = notes[n.id];
+        note = n;
+        textDocument = createNewTextDocument(note);
+    }
 }
 
 void NoteManager::writeNotes()
 {
-    //TODO
+    XmlStorage storage;
+    storage.write(noteCollection());
 }
 
 std::unique_ptr<QTextDocument> NoteManager::createNewTextDocument(const Note &note) {
@@ -131,7 +143,7 @@ std::unique_ptr<QTextDocument> NoteManager::createNewTextDocument(const Note &no
 
 }
 
-int nextNodeId() {
+int nextNoteId() {
 
     static int id = 0;
     return ++id;
