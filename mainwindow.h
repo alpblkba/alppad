@@ -11,6 +11,7 @@ class MainWindow;
 QT_END_NAMESPACE
 
 class NoteManager;
+class FindReplaceDialog;
 struct Note;
 // main window take the NoteManager by reference, and store a reference to a NoteManager as a member, we'll take it by reference in a constructor
 
@@ -36,6 +37,9 @@ private slots:
     void onRemoveNote(int id);
     void onRenameNote(int id, const QString& newTitle);
 
+    //handle FindReplaceDialog signals
+    void onFindReplaceDialog();
+
 
 private:
     void addNoteToList(const Note& note);
@@ -43,9 +47,14 @@ private:
 
     void init();
     void makeConnections();
+    void setupShortcuts();
 
 
     Ui::MainWindow *ui;
     NoteManager& noteManager;
+    FindReplaceDialog* m_findDialog;
+
+
+
 };
 #endif // MAINWINDOW_H

@@ -6,6 +6,9 @@
 #include "noteslistwidget.h"
 #include "QMessageBox"
 #include "algorithm"
+#include "findreplacedialog.h"
+#include <QShortcut>
+#include <QKeySequence>
 
 MainWindow::MainWindow(NoteManager& manager, QWidget *parent)
     : QWidget(parent), ui(new Ui::MainWindow), noteManager(manager)
@@ -17,6 +20,8 @@ MainWindow::MainWindow(NoteManager& manager, QWidget *parent)
     ui->setupUi(this);
 
     makeConnections();
+    setupShortcuts();
+
     init();  // take the notes from notes manager and do the things on ui
 }
 
@@ -119,6 +124,22 @@ void MainWindow::init() {
     }
 }
 
+void MainWindow::onFindReplaceDialog()
+{
+    if (!ui->textEdit || !ui->textEdit->document())
+        return;
+
+    if (!m_findDialog) {
+        m_findDialog = new FindReplaceDialog(ui->textEdit, this);
+    }
+
+    m_findDialog->show();
+    m_findDialog->raise();
+    m_findDialog->activateWindow();
+}
+
+
+
 
 void MainWindow::makeConnections()
 {
@@ -131,4 +152,46 @@ void MainWindow::makeConnections()
     connect(ui->notesListWidget, &NotesListWidget::selectedNoteChanged, this, &MainWindow::onSelectedNoteChanged);
     connect(ui->notesListWidget, &NotesListWidget::removeNote, this, &MainWindow::onRemoveNote);
     connect(ui->notesListWidget, &NotesListWidget::renameNote, this, &MainWindow::onRenameNote);
+
+    new QShortcut(QKeySequence::Find, this, [this]() {
+        onFindReplaceDialog();
+    });
+
+    new QShortcut(QKeySequence::Replace, this, [this]() {
+        onFindReplaceDialog();
+    });
+
 }
+
+
+void MainWindow::setupShortcuts()
+{
+    // Find shortcut
+#ifdef Q_OS_MAC
+    QKeySequence findSeq = QKeySequence::Find; // Cmd+F on macOS
+#else
+    QKeySequence findSeq = QKeySequence::Find; // Ctrl+F on Windows/Linux
+#endif
+
+    QAction* findAction = new QAction(tr("Find"), this);
+    findAction->setShortcut(findSeq);
+    findAction->setShortcutContext(Qt::WidgetShortcut); // works when main window active
+    connect(findAction, &QAction::triggered, this, &MainWindow::onFindReplaceDialog);
+    addAction(findAction); // Important: attaches to widget
+
+    // Replace shortcut
+#ifdef Q_OS_MAC
+    QKeySequence replaceSeq = QKeySequence(Qt::META | Qt::ALT | Qt::Key_F); // Cmd+Alt+F
+#else
+    QKeySequence replaceSeq = QKeySequence::Replace; // Ctrl+H
+#endif
+
+    QAction* replaceAction = new QAction(tr("Replace"), this);
+    replaceAction->setShortcut(replaceSeq);
+    replaceAction->setShortcutContext(Qt::WidgetShortcut);
+    connect(replaceAction, &QAction::triggered, this, &MainWindow::onFindReplaceDialog);
+    addAction(replaceAction);
+}
+
+
+

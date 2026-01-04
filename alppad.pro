@@ -9,6 +9,7 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    findreplacedialog.cpp \
     main.cpp \
     mainwindow.cpp \
     notemanager.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
     xmlstorage.cpp
 
 HEADERS += \
+    findreplacedialog.h \
     mainwindow.h \
     note.h \
     notemanager.h \
@@ -27,6 +29,7 @@ HEADERS += \
     xmlstorage.h
 
 FORMS += \
+    findreplacedialog.ui \
     mainwindow.ui \
     noteslistwidget.ui \
     renamedialog.ui
