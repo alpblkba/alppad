@@ -36,8 +36,8 @@ To build and run this application, you will need:
     cmake --build .
     ```
 ### Tracelog
-Jan 2, 2026: XML serialization added for saving notes.
-Jan 5, 2026: Find, replace and regex search utility added. Dealing with MacOS quirks.
+* Jan 2, 2026: XML serialization added for saving notes.
+* Jan 5, 2026: Find, replace and regex search utility added. Dealing with MacOS quirks.
 
 ### Development Status
 
